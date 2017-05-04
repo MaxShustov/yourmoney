@@ -1,8 +1,12 @@
 var gulp = require('gulp');
+var nodemon = require('gulp-nodemon');
 
 gulp.task('default', function(){
-    var watcher = gulp.watch('*.js');
-
-    watcher.on('change', function(){
+    nodemon({
+        script: 'app.js',
+        ext: 'js',
+        env: {
+            port: 80
+        }
     })
 });

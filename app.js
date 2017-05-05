@@ -1,10 +1,13 @@
 var express = require('express');
+var Transaction = require('./models/Transaction.js');
+var transactionRepository = require('./helpers/transactionsRepository.js');
+
 var app = express();
 
-app.get('/', function(req, res){
-  res.send('Hello world. I\'ve changed file!');
-});
+var transactionsRouter = require('./routers/transactionRouter')(Transaction, transactionRepository);
 
-var port = process.env.port;
+app.use('/api', transactionsRouter);
+
+var port = process.env.port || 8080;
 
 app.listen(port);

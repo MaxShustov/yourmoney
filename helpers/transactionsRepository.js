@@ -10,6 +10,9 @@ var repository = function(){
     return {
         getAll: function(){
             return transactions;
+        },
+        getById: function(id){
+            return transactions.find(element => element.id === id);
         }
     }
 }

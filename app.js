@@ -8,6 +8,6 @@ var transactionsRouter = require('./routers/transactionRouter')(Transaction, tra
 
 app.use('/api', transactionsRouter);
 
-var port = process.env.port || 8080;
+var port = process.env.port || 80;
 
 app.listen(port);

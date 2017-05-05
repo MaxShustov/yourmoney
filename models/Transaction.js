@@ -1,10 +1,10 @@
 var guid = require('guid');
 
-var Transaction = function(value, description, category){
+var Transaction = function(transacation){
     this.id  = guid.raw();
-    this.value = value;
-    this.description = description;
-    this.category = category;
+    this.value = transacation.value;
+    this.description = transacation.description;
+    this.category = transacation.category;
 }
 
 module.exports = Transaction;

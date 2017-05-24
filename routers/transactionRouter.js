@@ -24,18 +24,26 @@ var router = function(Transaction, transactionRepository){
         res.sendStatus(201);
     })
     .put('/transactions/:id', function(req, res){
-        req.body.id = req.params.id;
+        req.body._id = req.params.id;
 
-        //transactionRepository.update(req.body);
+        Transaction.find({'_id': req.body._id}, function(err, originalTransactions){
+            var originalTransaction = originalTransactions[0];
 
-        res.sendStatus(204);
+            originalTransaction.value = req.body.value;
+            originalTransaction.description = req.body.description;
+            originalTransaction.category = req.body.category;
+
+            originalTransaction.save();
+
+            res.sendStatus(204);
+        });
     })
     .delete('/transactions/:id', function(req, res){
         var id = req.params.id;
 
-        transactionRepository.remove(id);
-
-        res.sendStatus(204);
+        Transaction.remove({'_id': id}, function(err){
+            res.sendStatus(204);
+        });
     });
 
     return transactionRouter;

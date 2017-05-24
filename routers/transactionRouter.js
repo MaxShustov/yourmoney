@@ -1,31 +1,32 @@
 var express = require('express');
 
-var router = function(Trasaction, transactionRepository){
+var router = function(Transaction, transactionRepository){
     var transactionRouter = express.Router();
 
     transactionRouter
     .get('/transactions', function(req, res){
-            var transactions = transactionRepository.getAll();
-
-            res.json(transactions);
+            Transaction.find({}, function(err, t){
+                res.json(t);
+            });            
         })
     .get('/transactions/:id', function(req, res){
         var id = req.params.id;
-        var transaction = transactionRepository.getById(id);
 
-        res.json(transaction);
+        Transaction.findOne({'_id': id}, function(err, t){
+            res.json(t);
+        });
     })
     .post('/transactions', function(req, res){
-        var transaction = new Trasaction(req.body);
+        var transaction = new Transaction(req.body);
 
-        transactionRepository.add(transaction);
+        transaction.save();
 
         res.sendStatus(201);
     })
     .put('/transactions/:id', function(req, res){
         req.body.id = req.params.id;
 
-        transactionRepository.update(req.body);
+        //transactionRepository.update(req.body);
 
         res.sendStatus(204);
     })

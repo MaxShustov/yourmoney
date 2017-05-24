@@ -12,6 +12,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/api', transactionsRouter);
 
-var port = process.env.port || 80;
+var port = process.env.port || 53467;
 
 app.listen(port);

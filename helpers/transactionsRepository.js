@@ -9,7 +9,13 @@ transactions.push(new Transaction({value: -100, description: 'Mac book Pro', cat
 var repository = function(){
     return {
         getAll: function(){
-            return transactions;
+            // var transaction = new Transaction({value: -100, description: 'Milk', category: 'Food'});
+
+            // transaction.save();
+
+            Transaction.find({}, function(err, t){
+                return t;
+            });
         },
         getById: function(id){
             return transactions.find(element => element.id === id);

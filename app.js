@@ -1,11 +1,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var Transaction = require('./models/Transaction.js');
-var transactionRepository = require('./helpers/transactionsRepository.js');
 
 var app = express();
 
-var transactionsRouter = require('./routers/transactionRouter')(Transaction, transactionRepository);
+var transactionsRouter = require('./routers/transactionRouter')(Transaction);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

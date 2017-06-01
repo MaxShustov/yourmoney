@@ -1,6 +1,6 @@
 var express = require('express');
 
-var router = function(Transaction, transactionRepository){
+var router = function(Transaction){
     var transactionRouter = express.Router();
 
     transactionRouter

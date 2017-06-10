@@ -8,7 +8,7 @@ var app = express();
 
 var transactionsRouter = require('./routers/transactionRouter')(Transaction);
 var userRouter = require('./routers/userRouter')(Transaction, User);
-var categoryRouter = require('./routers/categoryRouter.js')(Category);
+var categoryRouter = require('./routers/categoryRouter.js')(Category, Transaction);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

@@ -1,6 +1,6 @@
 var express = require('express');
 
-var router = function(Category){
+var router = function(Category, Transaction){
     var categoryRouter = express.Router();
 
     categoryRouter
@@ -42,6 +42,13 @@ var router = function(Category){
         Category.remove({'_id': id}, function(err){
             res.sendStatus(204);
         });
+    })
+    .get('/categories/:name/transactions', function(req, res){
+        var name = req.params.name;
+
+        Transaction.find({category: name}, function(err, transactions){
+            res.json(transactions);
+        })
     });
 
     return categoryRouter;

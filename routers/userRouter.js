@@ -5,10 +5,21 @@ var router = function(Transaction, User){
 
     userRouter
         .post('/users/login', function(req, res){
-            User.find({userName: req.body.userName}, function(err, users){
-                var userId = users[0]._id;
+            var userLoginModel = {
+                userName: req.body.userName,
+                password: req.body.password
+            };
 
-                res.json({UserId: userId});
+            User.find(userLoginModel, function(err, users){
+                if(users.length >= 1){
+                    var userId = users[0]._id;
+
+                    res.json({UserId: userId});
+                } else{
+                    res.status(403);
+
+                    res.send('Auth failed');
+                }
             })
         })
         .post('/users/', function(req, res){
@@ -17,6 +28,21 @@ var router = function(Transaction, User){
             user.save();
 
             res.sendStatus(201);
+        })
+        .put('/users/:id', function(req, res){
+            req.body._id = req.params.id;
+
+            User.find({'_id': req.body._id}, function(err, originalUsers){
+                var originalUser = originalUsers[0];
+
+                originalUser.userName = req.body.userName;
+                originalUser.password = req.body.password;
+                originalUser.email = req.body.email;
+
+                originalUser.save();
+
+                res.sendStatus(204);
+            });
         })
         .get('/users/', function(req, res){
             User.find({}, function(err, users){

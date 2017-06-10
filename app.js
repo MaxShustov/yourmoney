@@ -15,4 +15,8 @@ app.use('/api', userRouter);
 
 var port = process.env.PORT || 53467;
 
-app.listen(port);
+app.set('port', port);
+
+app.listen(port, function(){
+    console.log('Node app is running on port', app.get('port'));
+});

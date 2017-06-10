@@ -12,7 +12,8 @@ var transacationSchema = new Schema({
     value: Number,
     description: String,
     category: String,
-    userId: String
+    userId: String,
+    date: {type: Date, default: Date.now()}
 }, {_id: false})
 
 var Transaction = connection.model('Transaction', transacationSchema);

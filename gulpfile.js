@@ -6,7 +6,7 @@ gulp.task('default', function(){
         script: 'app.js',
         ext: 'js',
         env: {
-            port: 53467
+            PORT: 53467
         }
     })
 });

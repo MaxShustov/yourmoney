@@ -32,6 +32,7 @@ var router = function(Transaction){
             originalTransaction.value = req.body.value;
             originalTransaction.description = req.body.description;
             originalTransaction.category = req.body.category;
+            originalTransaction.userId = req.body.userId;
 
             originalTransaction.save();
 

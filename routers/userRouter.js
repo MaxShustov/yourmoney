@@ -54,11 +54,20 @@ var router = function(Transaction, User){
             })
         })
         .get('/users/:id/summary', function(req, res){
-            Transaction.find({}, function(err, transactions){
+            var userId = req.params.id;
+
+            Transaction.find({userId: userId}, function(err, transactions){
                 var summary = transactions.reduce((pv, cv) => pv.value + cv.value);
 
                 res.json({currentBalance: summary});
             }, 0); 
+        })
+        .get('/users/:id/transactions/', function(req, res){
+            var userId = req.params.id;
+
+            Transaction.find({userId: userId}, function(err, transactions){
+                res.json(transactions);
+            })
         });
 
     return userRouter;

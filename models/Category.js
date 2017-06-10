@@ -7,13 +7,11 @@ var connection = mongoose.connect(connectionString);
 
 var Schema = mongoose.Schema;
 
-var userSchema = new Schema({
+var categorySchema = new Schema({
     _id: {type: String, default: guid.raw()},
-    userName: { type : String , unique : true, required : true },
-    password: { type : String , unique : true, required : true },
-    email: String
+    name: { type : String , unique : true, required : true }
 }, {_id: false})
 
-var User = connection.model('User', userSchema);
+var Category = connection.model('Category', categorySchema);
 
-module.exports = User;
+module.exports = Category;

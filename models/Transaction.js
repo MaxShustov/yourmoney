@@ -1,7 +1,7 @@
 var guid = require('guid');
 var mongoose = require('mongoose');
-
-var connection = mongoose.connect('mongodb://127.0.0.1:27017/yourmoney');
+var connectionString = "mongodb://yourmoney-dev:06eoNQBtgbe5TwTsbYzv7tWJr0OeUDlZKMuSwGgxXk0MHtOAvoaRDdnYALy1yDXgxJPHnC6pg7g1PJoKgHM0jQ==@yourmoney-dev.documents.azure.com:10255/yourmoney?ssl=true";
+var connection = mongoose.connect(connectionString);
 
 var Schema = mongoose.Schema;
 

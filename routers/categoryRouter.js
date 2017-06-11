@@ -30,6 +30,7 @@ var router = function(Category, Transaction){
             var originalCategory = originalCategories[0];
 
             originalCategory.name = req.body.name;
+            originalCategory.isIncome = req.body.isIncome;
 
             originalCategory.save();
 

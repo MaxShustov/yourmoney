@@ -7,7 +7,8 @@ var connection = mongoose.connect(settings.connectionString);
 var Schema = mongoose.Schema;
 
 var categorySchema = new Schema({
-    name: { type : String , unique : true, required : true }
+    name: { type : String , unique : true, required : true },
+    isIncome: {type: Boolean, default: false}
 })
 
 var Category = connection.model('Category', categorySchema);

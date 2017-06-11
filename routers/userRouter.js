@@ -25,7 +25,9 @@ var router = function(Transaction, User){
         .post('/users/', function(req, res){
             var user = new User(req.body);
 
-            user.save();
+            user.save(function(err){
+                console.log(err);
+            });
 
             res.sendStatus(201);
         })

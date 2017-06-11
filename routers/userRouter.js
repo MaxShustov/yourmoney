@@ -59,9 +59,15 @@ var router = function(Transaction, User){
             var userId = req.params.id;
 
             Transaction.find({userId: userId}, function(err, transactions){
-                var summary = transactions.reduce((pv, cv) => pv.value + cv.value);
+                if(transactions.length == 0)
+                {
+                    res.json({currentBalance: 0});
+                }
+                else{
+                    var summary = transactions.reduce((pv, cv) => pv.value + cv.value);
 
-                res.json({currentBalance: summary});
+                    res.json({currentBalance: summary});
+                }
             }, 0); 
         })
         .get('/users/:id/transactions/', function(req, res){

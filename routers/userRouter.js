@@ -66,7 +66,7 @@ var router = function(Transaction, User){
                 else{
                     var summary = transactions.reduce((pv, cv) => pv + cv.value, 0);
 
-                    res.json({currentBalance: summary.value});
+                    res.json({currentBalance: summary});
                 }
             }); 
         })

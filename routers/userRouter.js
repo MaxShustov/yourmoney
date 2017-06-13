@@ -64,11 +64,11 @@ var router = function(Transaction, User){
                     res.json({currentBalance: 0});
                 }
                 else{
-                    var summary = transactions.reduce((pv, cv) => pv.value + cv.value);
+                    var summary = transactions.reduce((pv, cv) => pv + cv.value, 0);
 
-                    res.json({currentBalance: summary});
+                    res.json({currentBalance: summary.value});
                 }
-            }, 0); 
+            }); 
         })
         .get('/users/:id/transactions/', function(req, res){
             var userId = req.params.id;

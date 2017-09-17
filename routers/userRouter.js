@@ -1,6 +1,7 @@
 var express = require('express');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
+var passport = require("passport");
 var jwtOptions = require('../jwtOptions.js');
 var saltRounds = 10;
 
@@ -8,7 +9,7 @@ var router = function(Transaction, User){
     var userRouter = express.Router();
 
     userRouter
-        .post('/users/login', function(req, res){
+        .post('/login', function(req, res){
             var userLoginModel = {
                 userName: req.body.userName,
                 password: req.body.password
@@ -39,17 +40,17 @@ var router = function(Transaction, User){
             bcrypt.hash(user.password, saltRounds).then(function(hashedPassword){
                 user.password = hashedPassword;
                 user.save(function(err){
-                    if(!err){
-                        res.sendStatus(201);
+                    if(err){
+                        res.status(500).json({message: "Some error has occured.", err: err});
                     }
                     else{
-                        console.log(err);
+                        res.sendStatus(201);
                     }
                 });
             });
         })
-        .put('/users/:id', function(req, res){
-            req.body._id = req.params.id;
+        .put('/users/', passport.authenticate('jwt', {session: false}), function(req, res){
+            req.body._id = req.user._id;
 
             User.find({'_id': req.body._id}, function(err, originalUsers){
                 var originalUser = originalUsers[0];
@@ -63,35 +64,13 @@ var router = function(Transaction, User){
                 res.sendStatus(204);
             });
         })
-        .get('/users/', function(req, res){
+        .get('/users/', passport.authenticate('jwt', {session: false}), function(req, res){
             User.find({}, function(err, users){
                 var userNames = users.map(function(user){
                     return {userName: user.userName};
                 })
 
                 res.json(userNames);
-            })
-        })
-        .get('/users/:id/summary', function(req, res){
-            var userId = req.params.id;
-
-            Transaction.find({userId: userId}, function(err, transactions){
-                if(transactions.length == 0)
-                {
-                    res.json({currentBalance: 0});
-                }
-                else{
-                    var summary = transactions.reduce((pv, cv) => pv + cv.value, 0);
-
-                    res.json({currentBalance: summary});
-                }
-            }); 
-        })
-        .get('/users/:id/transactions/', function(req, res){
-            var userId = req.params.id;
-
-            Transaction.find({userId: userId}, function(err, transactions){
-                res.json(transactions);
             })
         });
 

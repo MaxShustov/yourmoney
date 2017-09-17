@@ -34,9 +34,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(passport.initialize());
 
+app.use('/api', userRouter);
 app.use('/api', passport.authenticate('jwt', {session: false}));
 app.use('/api', transactionsRouter);
-app.use('/api', userRouter);
 app.use('/api', categoryRouter);
 
 var port = process.env.PORT || 53467;

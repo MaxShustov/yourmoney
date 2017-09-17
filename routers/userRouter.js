@@ -1,4 +1,8 @@
 var express = require('express');
+var bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
+var jwtOptions = require('../jwtOptions.js');
+var saltRounds = 10;
 
 var router = function(Transaction, User){
     var userRouter = express.Router();
@@ -10,26 +14,39 @@ var router = function(Transaction, User){
                 password: req.body.password
             };
 
-            User.find(userLoginModel, function(err, users){
+            User.find({userName: userLoginModel.userName}, function(err, users){
                 if(users.length >= 1){
-                    var userId = users[0]._id;
+                    var user = users[0];
+                    bcrypt.compare(userLoginModel.password, user.password, function(err, same){
+                        if(same){
+                            var payload = {id: user._id};    
+                            var token = jwt.sign(payload, jwtOptions.secretOrKey);
 
-                    res.json({UserId: userId});
+                            res.status(200).json({message: "OK", token: token});
+                        }
+                        else{
+                            res.status(401).json({message: "User name or password is invalid."});
+                        }
+                    });
                 } else{
-                    res.status(403);
-
-                    res.send('Auth failed');
+                    res.status(401).json({message: "User name or password is invalid."});
                 }
             })
         })
         .post('/users/', function(req, res){
             var user = new User(req.body);
 
-            user.save(function(err){
-                console.log(err);
+            bcrypt.hash(user.password, saltRounds).then(function(hashedPassword){
+                user.password = hashedPassword;
+                user.save(function(err){
+                    if(!err){
+                        res.sendStatus(201);
+                    }
+                    else{
+                        console.log(err);
+                    }
+                });
             });
-
-            res.sendStatus(201);
         })
         .put('/users/:id', function(req, res){
             req.body._id = req.params.id;

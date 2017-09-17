@@ -3,6 +3,26 @@ var bodyParser = require('body-parser');
 var Transaction = require('./models/Transaction.js');
 var User = require('./models/User.js');
 var Category = require('./models/Category.js');
+var passport = require("passport");
+var JwtStrategy = require("passport-jwt").Strategy;
+var jwtOptions = require('./jwtOptions.js');
+
+var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, done){
+    console.log('jwt_payload '+ jwt_payload);
+    User.findById(jwt_payload.id, function(err, user){
+        if(err){
+            done(err);
+        }
+        else if(user){
+            done(null, user);
+        }
+        else{
+            done(null, false);
+        }
+    });
+});
+
+passport.use(strategy);
 
 var app = express();
 
@@ -12,7 +32,9 @@ var categoryRouter = require('./routers/categoryRouter.js')(Category, Transactio
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(passport.initialize());
 
+app.use('/api', passport.authenticate('jwt', {session: false}));
 app.use('/api', transactionsRouter);
 app.use('/api', userRouter);
 app.use('/api', categoryRouter);

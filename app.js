@@ -8,7 +8,6 @@ var JwtStrategy = require("passport-jwt").Strategy;
 var jwtOptions = require('./jwtOptions.js');
 
 var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, done){
-    console.log('jwt_payload '+ jwt_payload);
     User.findById(jwt_payload.id, function(err, user){
         if(err){
             done(err);

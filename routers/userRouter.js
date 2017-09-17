@@ -44,7 +44,7 @@ var router = function(Transaction, User){
                         res.status(500).json({message: "Some error has occured.", err: err});
                     }
                     else{
-                        res.sendStatus(201);
+                        res.status(201).json({message: "User has been created."});
                     }
                 });
             });
@@ -53,15 +53,25 @@ var router = function(Transaction, User){
             req.body._id = req.user._id;
 
             User.find({'_id': req.body._id}, function(err, originalUsers){
-                var originalUser = originalUsers[0];
-
-                originalUser.userName = req.body.userName;
-                originalUser.password = req.body.password;
-                originalUser.email = req.body.email;
-
-                originalUser.save();
-
-                res.sendStatus(204);
+                if(err){
+                    res.status(500).json({message: "Can not update the user.", err: err});
+                }
+                else{
+                    bcrypt.hash(req.body.password, saltRounds).then(function(hashedPassword){                    
+                        var originalUser = originalUsers[0];
+                        originalUser.userName = req.body.userName;
+                        originalUser.password = hashedPassword;
+                        originalUser.email = req.body.email;
+                        originalUser.save(function(err){
+                            if(err){
+                                res.status(500).json({message: "Can not update the user.", err: err});
+                            }
+                            else{
+                                res.status(204).json({message: "User has been updated."});
+                            }
+                        });
+                    });
+                }
             });
         })
         .get('/users/', passport.authenticate('jwt', {session: false}), function(req, res){

@@ -9,6 +9,29 @@ var router = function(Transaction){
                 res.json(t);
             });            
         })
+    .get('/transactions/summary', function(req, res){
+        var userId = req.user._id;
+
+        var mapReduce = {};
+        mapReduce.map = function() { 
+            emit(this.userId, this.value);
+        };
+        mapReduce.reduce = function(key, values) { if(values){
+            return values.reduce(function(a, b){
+                return a + b;
+            }, 0);
+        } };
+
+        Transaction.mapReduce(mapReduce, function(err, totalSums){
+            if(err){
+                res.status(500).json({message: "Something goes wrong ...", err: err});
+            }
+
+            var userTotalSum = totalSums.filter(sum => sum._id == userId);
+
+            res.json({message: "OK", totalSum: userTotalSum[0].value});
+        })
+    })
     .get('/transactions/:id', function(req, res){
         var id = req.params.id;
 

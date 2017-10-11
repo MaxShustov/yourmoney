@@ -41,7 +41,12 @@ var router = function(Transaction, User){
                 user.password = hashedPassword;
                 user.save(function(err){
                     if(err){
-                        res.status(500).json({message: "Some error has occured.", err: err});
+                        if(err.code === 11000){
+                            res.status(400).json({message: "User with this name already exists."});
+                        }
+                        else{
+                            res.status(500).json({message: "Some error has occured.", err: err});
+                        }
                     }
                     else{
                         res.status(201).json({message: "User has been created."});

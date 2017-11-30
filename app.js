@@ -6,6 +6,7 @@ var Category = require('./models/Category.js');
 var passport = require("passport");
 var JwtStrategy = require("passport-jwt").Strategy;
 var jwtOptions = require('./jwtOptions.js');
+var cors = require('cors');
 
 var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, done){
     User.findById(jwt_payload.id, function(err, user){
@@ -24,6 +25,14 @@ var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, done){
 passport.use(strategy);
 
 var app = express();
+
+var corsOptions = {
+    origin: process.env.originUrl || 'http://localhost:4243',
+    optionsSuccessStatus: 200
+  }
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 var transactionsRouter = require('./routers/transactionRouter')(Transaction);
 var userRouter = require('./routers/userRouter')(Transaction, User);

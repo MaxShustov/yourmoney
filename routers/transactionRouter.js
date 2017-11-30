@@ -5,8 +5,17 @@ var router = function(Transaction){
 
     transactionRouter
     .get('/transactions', function(req, res){
-            Transaction.find({userId: req.user._id}, function(err, t){
-                res.json(t);
+            var updatedDate = Date.parse(req.query.updateDate);
+
+            Transaction.find({userId: req.user._id}, function(err, transactions){
+
+                if(updatedDate){
+                    transactions = transactions.filter(function(transaction){
+                        return transaction.updateDate > updatedDate;
+                    });
+                }
+
+                res.json(transactions);
             });            
         })
     .get('/transactions/summary', function(req, res){

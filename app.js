@@ -26,8 +26,16 @@ passport.use(strategy);
 
 var app = express();
 
+var whitelist = process.env.whitelist || ['http://localhost:4243', 'http://localhost:4200'];
+
 var corsOptions = {
-    origin: process.env.originUrl || 'http://localhost:4243',
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      },
     optionsSuccessStatus: 200
   }
 

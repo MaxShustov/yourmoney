@@ -28,19 +28,18 @@ var app = express();
 
 var whitelist = process.env.whitelist || ['http://localhost:4243', 'http://localhost:4200'];
 
-var corsOptions = {
-    origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
-          callback(null, true)
-        } else {
-          callback(new Error('Not allowed by CORS'))
-        }
-      },
-    optionsSuccessStatus: 200
-  }
+var corsOptionsDelegate = function (req, callback) {
+    var corsOptions;
+    if (whitelist.indexOf(req.header('Origin')) !== -1) {
+        corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response 
+    }else{
+        corsOptions = { origin: false } // disable CORS for this request 
+    }
+    callback(null, corsOptions) // callback expects two parameters: error and options 
+}
 
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.use(cors(corsOptionsDelegate));
+app.options('*', cors(corsOptionsDelegate));
 
 var transactionsRouter = require('./routers/transactionRouter')(Transaction);
 var userRouter = require('./routers/userRouter')(Transaction, User);

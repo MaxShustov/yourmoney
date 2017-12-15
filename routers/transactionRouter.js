@@ -76,7 +76,7 @@ var router = function(Transaction){
         var id = req.params.id;
 
         Transaction.remove({userId: req.user._id, '_id': id}, function(err){
-            res.sendStatus(204);
+            res.status(204).json({message: 'Deleted'});
         });
     });
 

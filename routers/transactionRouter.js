@@ -54,7 +54,7 @@ var router = function(Transaction){
 
         transaction.save();
 
-        res.sendStatus(201);
+        res.status(201).json({message: "Created"});
     })
     .put('/transactions/:id', function(req, res){
         req.body._id = req.params.id;
@@ -69,7 +69,7 @@ var router = function(Transaction){
 
             originalTransaction.save();
 
-            res.sendStatus(204);
+            res.status(204).json({message: "Updated"});
         });
     })
     .delete('/transactions/:id', function(req, res){
